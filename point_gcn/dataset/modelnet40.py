@@ -60,7 +60,7 @@ class ModelNet40(Dataset):
 
 
 def main():
-    loader = ModelNet40('../../data', phase='test')
+    loader = ModelNet40('/kaggle/input/modelnet40-ply-hdf5-2048', phase='test')
     print(len(loader))
     print(len(loader.shape_names))
     print(loader.shape_names)
