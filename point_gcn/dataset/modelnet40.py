@@ -11,7 +11,8 @@ from point_gcn.tools.utils import load_h5
 
 class ModelNet40(Dataset):
     def __init__(self, data_path, num_points=1024, k=20, phase='train'):
-        self.data_path = os.path.join('/kaggle/input/modelnet40-ply-hdf5-2048', 'modelnet40_ply_hdf5_2048')
+        data_path="/kaggle/input/modelnet40-ply-hdf5-2048"
+        self.data_path = os.path.join(data_path, 'modelnet40_ply_hdf5_2048')
         self.num_points = num_points
         self.num_classes = 40
 
