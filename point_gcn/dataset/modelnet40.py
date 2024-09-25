@@ -40,16 +40,36 @@ class ModelNet40(Dataset):
 
         # build graph
         graph_path = os.path.join(data_path, 'graph_{}_{}.pkl'.format(k, phase))
-        if os.path.exists(graph_path):
-            with open(graph_path, 'rb') as handle:
+        output_graph_path = os.path.join('/kaggle/working', 'graph_{}_{}.pkl'.format(k, phase))
+
+        # 首先尝试从 output_graph_path 读取
+        if os.path.exists(output_graph_path):
+            with open(output_graph_path, 'rb') as handle:
                 self.graphs = pickle.load(handle)
         else:
-            self.graphs = []
-            for i in range(self.coordinates.shape[0]):
-                adj = build_graph(self.coordinates[i], k)
-                self.graphs.append(adj)
-            with open(graph_path, 'wb') as handle:
-                pickle.dump(self.graphs, handle)
+            # 如果 output_graph_path 不存在，则尝试从 graph_path 读取（如果需要）
+            if os.path.exists(graph_path):
+                with open(graph_path, 'rb') as handle:
+                    self.graphs = pickle.load(handle)
+            else:
+                self.graphs = []
+                for i in range(self.coordinates.shape[0]):
+                    adj = build_graph(self.coordinates[i], k)
+                    self.graphs.append(adj)
+                # 最终保存到可写路径
+                with open(output_graph_path, 'wb') as handle:
+                    pickle.dump(self.graphs, handle)
+        # graph_path = os.path.join(data_path, 'graph_{}_{}.pkl'.format(k, phase))
+        # if os.path.exists(graph_path):
+        #     with open(graph_path, 'rb') as handle:
+        #         self.graphs = pickle.load(handle)
+        # else:
+        #     self.graphs = []
+        #     for i in range(self.coordinates.shape[0]):
+        #         adj = build_graph(self.coordinates[i], k)
+        #         self.graphs.append(adj)
+        #     with open(graph_path, 'wb') as handle:
+        #         pickle.dump(self.graphs, handle)
 
     def __len__(self):
         return self.coordinates.shape[0]
